@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="MIDI file generator provided by Polytechnique Montréal">
+    <meta name="keywords"
+        content="Magenta, MIDI, Poly, Polytechnique, Music Generator, Sequence Generator, Montreal, Montréal">
+    <meta name="author" content="Laboratoire Quosséça">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="yes">
+    <title>Poly music generator </title>
+    <link rel="icon" type="image/x-icon" href="images/logo_poly_resize.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark border-bottom border-3 border-dark"
+            style="background-color: #1A6DAC;">
+            <div class="container-fluid align-items-center">
+                <a class="navbar-brand" href="https://www.polymtl.ca/" target="_blank">
+                    <img src="images/logo_poly.png" class="img-thumbnail align-text-right d-inline-block" alt="Logo"
+                        width="55" height="55" style="margin-right: 20px;">
+                    Polytechnique Montréal
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false   " aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-5">
+                            <a class="btn btn-outline-light btn-lg btn-block" id="btn-back-to-top"> <i
+                                    class="fa fa-home fa-lg"></i></a>
+                        </li>
+                        <li class="nav-item mx-5">
+                            <a class="btn btn-outline-light btn-lg btn-block" id="sign-in-user"> <i
+                                    class="fa fa-user fa-lg"></i></a>
+                        </li>
+                        <li class="nav-item mx-5">
+                            <a class="btn btn-outline-light btn-lg btn-block" id="language"> <i
+                                    class="fa fa-language fa-lg"></i></a>
+                        </li>
+                        <li class="nav-item mx-5">
+                            <a class="btn btn-outline-light btn-lg btn-block"
+                                href="https://www.polymtl.ca/labo-quosseca/en" target="_blank"> <i
+                                    class="fa fa-info fa-lg"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+
+        <div class="container-fluid" style="height: 120px;">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div>
+                    <h1 class="text-center display-4" style>Select between two projects made by our researchers</h1>
+                </div>
+                <div>
+                    <p class="text-muted text-center mb-0 mt-4">Learn more about these projects below</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card" style="width: 100%">
+                        <img class="card-img-top p-4" src="https://picsum.photos/400/300" alt="Card image cap">
+                        <div class="card-body text-center">
+                            <figure>
+                                <blockquote class="blockquote">
+                                    <p>
+                                        <b>RL-Tuner</b>
+                                    </p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer">
+                                    <i>Work provided by Daphné Lafleur</i>
+                                </figcaption>
+                            </figure>
+                            <p class="card-text text-left">Improved version of RL-Tuner using marginal probabilites
+                                provided by the Mini-CPBP solver</p>
+                            <a href="https://github.com/chandar-lab/RL-Tuner-CP"
+                                class="btn btn-outline-dark btn-lg btn-block mt-4" target="_blank"> <i
+                                    class="fa fa-github"></i> | Github </a>
+                            <div class="container" style="height: 20px;"></div>
+                            <hr>
+                            <div class="row">
+                                <p>
+                                    <a class="btn btn-dark btn-lg btn-block mt-4" data-bs-toggle="collapse"
+                                        href="#midiRLTuner" role="button" aria-expanded="false"
+                                        aria-controls="midiRLTuner">
+                                        MIDI Files Information
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="collapse" id="midiRLTuner">
+                                    <div class="card card-body">
+                                        <b>MIDI Files needed for RL-Tuner: </b>MIDI Files should not have more than 1
+                                        music sequence. Chords are not acceptable. Only the melody.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card" style="width: 100%;">
+                        <img class="card-img-top p-4" src="https://picsum.photos/400/300" alt="Card image cap">
+                        <div class="card-body text-center">
+                            <figure>
+                                <blockquote class="blockquote">
+                                    <p>
+                                        <b>CMT_CPBP</b>
+                                    </p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer">
+                                    <i>Work provided by Virasone Maribod</i>
+                                </figcaption>
+                            </figure>
+                            <p class="card-text text-left">Modified version of CMT (Chord Conditioned Melody
+                                Transformer), improved by Constraint Programming </p>
+                            <a href="https://github.com/Manibod/CMT_CPBP"
+                                class="btn btn-outline-dark btn-lg btn-block mt-4" target="_blank"> <i
+                                    class="fa fa-github"></i> | Github </a>
+                            <div class="container" style="height: 20px;"></div>
+                            <hr>
+                            <div class="row">
+                                <p>
+                                    <a class="btn btn-dark btn-lg btn-block mt-4" data-bs-toggle="collapse"
+                                        href="#midiCMT" role="button" aria-expanded="false" aria-controls="midiCMT">
+                                        MIDI Files Information
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="collapse" id="midiCMT">
+                                    <div class="card card-body">
+                                        <b>MIDI Files needed for CMT_CPBP: </b> MIDI Files should have a melody sequence
+                                        plus a chord sequence. Both required simultaneously.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="height: 80px;"></div>
+        <div class="container" style="width: 70%;">
+            <hr />
+        </div>
+        <div class="container-fluid" style="height: 40px;">
+        </div>
+        <div class="container border rounded" style="width: 50%;">
+            <div class="row m-4">
+                <h1 class="text-center display-4"><b>Choose your MIDI files</b></h1>
+            </div>
+            <div class="row m-4">
+                <input class="form-control form-control-lg" id="formFileLg" type="file" multiple>
+            </div>
+        </div>
+        <div class="container-fluid" style="height: 40px;"></div>
+    </main>
+    <footer>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js_webpage.js"></script>
+</body>
+
+
+</html>

@@ -1,0 +1,13 @@
+flask
+flask_wtf
+wtforms
+flask_sqlalchemy
+flask_mail
+datetime
+flask_security
+flask_login
+flask_migrate
+werkzeug #==2.0.3
+email-validator
+pyjwt
+music21
