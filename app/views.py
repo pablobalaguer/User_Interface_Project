@@ -195,6 +195,20 @@ def receive_midi_file():
     return ""
 
 
+@app.route("/chooseProject", methods=["GET", "POST"])
+def choose_project():
+    return render_template('project_choosing.html')
+
+@app.route("/CMT", methods=["GET", "POST"])
+def CMT_preprocess():
+    print('preprocess cmt')
+    return render_template('project_choosing.html')
+
+@app.route("/RL", methods=["GET", "POST"])
+def RL_Tuner_preprocess():
+    print('preprocess rltuner')
+    return render_template('project_choosing.html')
+
 #FUNCTIONS USED WITHOUT ROUTING
 
 def recreateFolder(cwd_path, folder):
