@@ -204,6 +204,8 @@ var measures8dropDown = document.getElementById("measures8-dropdown");
 var measures16dropDown = document.getElementById("measures16-dropdown");
 var measures32dropDown = document.getElementById("measures32-dropdown");
 
+var nbActiveBars = 8;
+
 //MEASURES WHERE IT AFFECTS
 var measures16row = document.getElementsByClassName("measure16"); //this is only one row, the div that contains the 16 (8 to 15) measures -> Collection with only one row
 var measures32row = document.getElementsByClassName("measure32"); //2 rows, the divs that contains the 32 (16 to 31) measures -> Collection with 2 rows of 8 bars
@@ -226,6 +228,7 @@ function display8bars() {
     for (var i = 0; i < measures32row.length; i++) { 
         measures32row[i].classList.remove("active");
     }
+    nbActiveBars = 8;
 }
 
 function display16bars() {
@@ -234,6 +237,7 @@ function display16bars() {
     for (var i = 0; i < measures32row.length; i++) {
         measures32row[i].classList.remove("active");
     }
+    nbActiveBars = 16;
 
 }
 function display32bars() {
@@ -241,6 +245,7 @@ function display32bars() {
     for (var i = 0; i < measures32row.length; i++) {
         measures32row[i].classList.add("active");
     }
+    nbActiveBars = 32;
 }
 //ACTIVE MEASURE COUNTER
     //we have to do it with a proxy ///Indeed, it was not necessary doing it with a proxy
@@ -334,6 +339,7 @@ let arrowPrev = document.getElementById("carouselPrev");
 let arrowPost = document.getElementById("carouselNext");
 let saveConstraintsButton = document.getElementById("saveDurAndPitchRow");
 let switchSepMeasure = document.getElementById("idInitialSepMeas");
+let nextPageButton = document.getElementById("nextPageButton");
 
 if (pitchContSelector) {
     pitchContSelector.addEventListener('click', enableDisableContent);
@@ -362,6 +368,11 @@ if(arrowPost) {
 if(saveConstraintsButton){
     saveConstraintsButton.addEventListener('click', saveConstraint);
 }
+
+if(nextPageButton){
+    nextPageButton.addEventListener('click',removeUnusedConstraints);
+}
+
 
 if(switchSepMeasure){
     switchSepMeasure.addEventListener('click', countFirstGroup);
@@ -534,11 +545,104 @@ function saveConstraint() {
     }
 
     enableDisableContentArrows();
+    updatePitchConstraintsDisplay();
+    updateDurConstraintsDisplay();
+
 
 }
 
+// DISPLAY CONSTRAINTS
+// Functions to update the pitch constraints display
+function updatePitchConstraintsDisplay() {
+  const constraintsList = document.getElementById("pitch-constraints");
+  constraintsList.innerHTML = "";
+  for (let i = 0; i < pitchConstraints.length; i++) {
+    const constraint = pitchConstraints[i];
+    const li = document.createElement("li");
+    li.innerHTML = constraint + "              " + constraint.length;
+    const removeButton = document.createElement("button");
+    removeButton.innerHTML = "Remove";
+    removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
+    removeButton.addEventListener("click", function() {
+      removePitchConstraint(i);
+    });
+    li.appendChild(removeButton);
+    constraintsList.appendChild(li);
+  }
+}
+
+function removePitchConstraint(index) {
+  pitchConstraints.splice(index, 1);
+  updatePitchConstraintsDisplay();
+}
 
 
+// Functions to update the duration constraints display
+function updateDurConstraintsDisplay() {
+  const constraintsList = document.getElementById("dur-constraints");
+  constraintsList.innerHTML = "";
+  for (let i = 0; i < durationConstraints.length; i++) {
+    const constraint = durationConstraints[i];
+    const li = document.createElement("li");
+    li.innerHTML = constraint + "              ";
+    const removeButton = document.createElement("button");
+    removeButton.innerHTML = "Remove";
+    removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px;";
+    removeButton.addEventListener("click", function() {
+      removeDurConstraint(i);
+    });
+    li.appendChild(removeButton);
+    constraintsList.appendChild(li);
+  }
+}
+
+function removeDurConstraint(index) {
+  durationConstraints.splice(index, 1);
+  updateDurConstraintsDisplay();
+}
 
 
+// Remove unused constraints when clicked 'continue' button
 
+function removeUnusedConstraints() {
+  // Pitch
+  const toRemove = [];
+  for (let i = 0; i < pitchConstraints.length; i++) {
+    const constraint = pitchConstraints[i];
+    const endInt = parseInt(constraint.split(":")[2]);
+    const endIntSep = parseInt(constraint.split(":")[constraint.split(":").length - 1])
+    if (endInt > nbActiveBars || endIntSep > nbActiveBars) {
+      toRemove.push(constraint);
+    }
+  }
+
+  for (let i = 0; i < toRemove.length; i++) {
+    const constraint = toRemove[i];
+    const index = pitchConstraints.indexOf(constraint);
+
+    if (index !== -1) {
+        removePitchConstraint(index)
+        }
+    }
+
+  // Duration
+  const toRemoveDur = [];
+  for (let i = 0; i < durationConstraints.length; i++) {
+    const constraint = durationConstraints[i];
+    const endInt = parseInt(constraint.split(":")[2]);
+    const endIntSep = parseInt(constraint.split(":")[constraint.split(":").length - 1])
+    if (endInt > nbActiveBars || endIntSep > nbActiveBars) {
+      toRemoveDur.push(constraint);
+    }
+  }
+
+  for (let i = 0; i < toRemoveDur.length; i++) {
+    const constraint = toRemoveDur[i];
+    const index = durationConstraints.indexOf(constraint);
+
+    if (index !== -1) {
+        removeDurConstraint(index)
+        }
+    }
+
+}
