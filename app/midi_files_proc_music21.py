@@ -4,11 +4,11 @@ import shutil
 import stat
 import sys
 
-def MIDIConvertor(path_to_file, cm_path, om_path, garbage_path):
+def MIDIConverter(path_to_file, cm_path, om_path, garbage_path):
 
     midifileMusicScore = music21.converter.parse(path_to_file)
     partsMIDIMusicScore = len(midifileMusicScore.recurse().getElementsByClass(music21.stream.Part))
-    return(midifileMusicScore,partsMIDIMusicScore)
+    return(midifileMusicScore, partsMIDIMusicScore)
 
 
 def MIDISelector(path_to_file, cm_path, om_path, garbage_path,midifileMusicScore,part_vble):
@@ -57,7 +57,7 @@ def path_establish():
     path_om = directory + "/only_melody_midi"
     path_cm = directory + "/chords_melody_midi"
     path_MIDI_garbage = directory + "/garbage"
-    return(cwd,directory,path_om,path_cm,path_MIDI_garbage)
+    return(cwd, directory, path_om, path_cm, path_MIDI_garbage)
 
 #------------------------------------MAIN------------------------------#
 def process():
@@ -77,7 +77,7 @@ def process():
 
     for f in os.scandir(directory):
         if (f.is_file() and f.name.endswith('.mid')):
-            MIDIConvertor(str(f.path), path_cm, path_om, path_MIDI_garbage)
+            MIDIConverter(str(f.path), path_cm, path_om, path_MIDI_garbage)
 
 
     #we delete the MIDI FIles we could not move (the raw ones with M&C)

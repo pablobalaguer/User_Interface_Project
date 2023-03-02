@@ -11,3 +11,4 @@ werkzeug #==2.0.3
 email-validator
 pyjwt
 music21
+flask-cors

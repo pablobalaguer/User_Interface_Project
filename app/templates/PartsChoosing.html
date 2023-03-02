@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="MIDI file generator provided by Polytechnique Montréal">
@@ -55,19 +53,51 @@
                 </div>
             </div>
         <!--Overlay-->
-        <div class="overlayPopUp" style="position: absolute;"></div>
+        <div class="overlayPopUp active" style="position: absolute;"></div>
         <!---->
         </nav>
     </header>
     <main>
 
+        <!--SELECT MELODY FORM-->
+        <div class="container py-4 rounded popup-2" style="background-color: white;" id="MelodyFormID">
+            <div class="row">
+                <h1 class="display-4 fw-bold text-center mb-2">Select melody</h1>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-1"></div>
+                <div class="col-7 align-items-center border">
+                    <div class="row mt-2 mb-4">
+                        <h2>Current MIDI File</h2>
+                        <label>{{ CurrentMelodyName }}</label>    
+                    </div>
+                    <div class="row mb-4">
+                        <h2>Number of parts</h2>
+                        <label>{{ CurrentMelodyNumberParts }}</label>
+                    </div>
+                    <div class="row mb-4">
+                        <h2>Part to use as the melody</h2>
+                        <label for="SelectPart">{{ PartsRange }}</label>
+                        <form class="mt-2" action="{{ url_for('ChooseParts') }}" method="POST">
+                            <input name="text" placeholder="Enter number" id="inputkeyboard">
+                            <input type="submit" value="Send" class="disabled-general" id="sendButtonID">
+                        </form>
+                    </div>   
+                </div>
+                <div class="col-4 justify-items-center">
+                    <img src="static/images/notes.png" class="img-fluid"
+                        style="margin-left: auto; margin-right: auto; display: block;">
+                </div>
+            </div>
+        </div>
+        <!---->
 
 
-
-        <div class="container-fluid" style="height: 15vh;"></div>
+        <!--
+            <div class="container-fluid" style="height: 15vh;"></div>
         <div class="container border rounded mb-4 chooseMIDI">
             <div class="row m-4">
-                <h1 class="text-center display-4"><b> Choose the parts of your MIDI files</b></h1>
+                <h1 class="text-center display-4"><b>Select what part will be used as a Melody</b></h1>
             </div>
             <div class="row m-4">
                 <form action="{{ url_for('ChooseParts') }}" method="POST">
@@ -78,96 +108,17 @@
                 <input class="form-control form-control-lg" id="formFileLg" type="file" multiple accept=".mid">
             </div>
             <div class="row m-4 text-center">
-                    <button class="btn btn-outline-dark btn-lg" onclick="document.location.href='{{url_for('fileProcess')}}';">  Continue </button>
+                    <button class="btn btn-outline-dark btn-lg" onclick= "document.location.href='{{url_for('fileProcess')}}';">  Continue </button>
             </div>
         </div>
-        <!--Sign up Form-->
-        <div class="container py-4 rounded popup" style="background-color: white;" id="SignupFormID">
-            <div class="row">
-                <div class="col-11"></div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-outline-dark btn-lg border-0"
-                        id="closeSignUpForm">&times;</button>
-                </div>
-            </div>
-            <div class="row">
-                <h1 class="display-4 fw-bold text-center mb-4">Sign up</h1>
-            </div>
-            <div class="row align-items-center">
-                <div class="col-8 align-items-center">
-                    <label for="InputUsername"><i class="fa fa-user fa-lg px-2"></i>Username </label>
-                    <input type="text" class="form-control my-2 keyboardconst" id="InputUsernameID" maxlength="20" placeholder="Enter username">
-                    <div class="invalid-feedback mb-2 feedbck"></div>
-                    <label for="InputEmail"><i class="fa fa-envelope fa-lg px-2"></i>Email address</label>
-                    <input type="email" class="form-control my-2 keyboardconst" id="InputEmailID" placeholder="Enter email">
-                    <div class="invalid-feedback mb-2 feedbck"></div>
-                    <label for="InputPassword"><i class="fa fa-lock fa-lg px-2"></i>Password</label>
-                    <input type="password" class="form-control my-2 keyboardconst" id="InputPasswordID" maxlength="20" placeholder="Enter password">
-                    <div class="invalid-feedback mb-2 feedbck"></div>
-                    <label for="InputPasswordRep"><i class="fa fa-repeat fa-lg px-2"></i>Repeat password</label>
-                    <input type="password" class="form-control my-2 keyboardconst" id="InputPasswordRepID" placeholder="Repeat password" maxlength="20">
-                    <div class="invalid-feedback feedbck"></div>
-                </div>
-                <div class="col-4 justify-items-center">
-                    <img src="static/images/radiocassete.png" class="img-fluid"
-                        style="margin-left: auto; margin-right: auto; display: block;">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4 text-center">
-                    <button class="btn btn-outline-dark btn-lg w-100 btn-block mt-4 mb-4" id="signupAPI">
-                        Sign up
-                    </button>
-                    <small class="form-text text-muted">Already have an account? <button class="loginButton" style="background: none; border: none;"> <b>Log in</b> </button></small>
-                </div>
-                <div class="col-4"></div>
-            </div>
-        </div>
-        <!---->
-        <!--Login Form-->
-        <div class="container py-4 rounded popup" style="background-color: white;" id="LoginFormID">
-            <div class="row">
-                <div class="col-11"></div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-outline-dark btn-lg border-0"
-                        id="closeLogInForm">&times;</button>
-                </div>
-            </div>
-            <div class="row">
-                <h1 class="display-4 fw-bold text-center mb-4">Log in</h1>
-            </div>
-            <div class="row align-items-center">
-                <div class="col-8 align-items-center">
-                    <label for="InputUsernameLogin"><i class="fa fa-user fa-lg px-2"></i>Username</label>
-                    <input type="text" class="form-control my-2 keyboardconst" id="InputUsernameLoginID" maxlength="20" placeholder="Enter username">
-                    <div class="invalid-feedback mb-2 feedbck"></div>
-                    <label for="InputPasswordLogin"><i class="fa fa-lock fa-lg px-2"></i>Password</label>
-                    <input type="password" class="form-control my-2 keyboardconst" id="InputPasswordLoginID" placeholder="Enter password" maxlength="20">
-                    <div class="invalid-feedback feedbck"></div>
-                </div>
-                <div class="col-4 justify-items-center">
-                    <img src="static/images/radiocassete.png" class="img-fluid"
-                        style="margin-left: auto; margin-right: auto; display: block;">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4 text-center">
-                    <button class="btn btn-outline-dark btn-lg w-100 btn-block mt-4 mb-4" id="loginAPI">
-                        Log in
-                    </button>
-                    <small class="form-text text-muted">Don't you have an account? <button id="signupButton" style="background: none; border: none;"> <b>Sign up</b> </button></small>
-                </div>
-                <div class="col-4"></div>
-            </div>
-        </div>
-        <!---->
+
+        -->
         <!--Overlay-->
-        <div class="overlayPopUp" style="position: fixed;"></div>
+        <div class="overlayPopUp active" style="position: fixed;"></div>
         <!---->
     </main>
-    <footer class="text-center text-white border-top" style="background-color: #5f99c5; ">
+    <!--Footer is only sticked to the bottom here, that's why in the Main Page we do not have the class 'footer' added-->
+    <footer class="text-center text-white border-top footer" style="background-color: #5f99c5; ">
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
                 <div class="col-4"></div>
@@ -237,7 +188,7 @@
         integrity="sha512-plyexAULVlTExvDn2yUZFJV9F8q+53MC/GpU9dEuNGXmrrI3J8Rcffjvxg3OOBALBvF+UILPLIBEoCeF2maqTQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="static/js/MainPage.js"></script>
+    <script type="text/javascript" src="static/js/PartsChoosing.js"></script>
 
 </body>
 

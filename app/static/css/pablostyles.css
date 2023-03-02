@@ -137,6 +137,15 @@
     transition: transform 0.6s, top 0.6s;
 }
 
+.popup-2 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    visibility: hidden;
+    z-index: 10;
+    transform: translate(-50%, -50%) scale(0.1);
+}
+
 .open-popup {
     visibility: visible;
     transform: translate(-50%, -50%) scale(1);
@@ -229,6 +238,26 @@ input[name="pitchNSD"] {
 .carousel-control-next,
 .carousel-control-prev /*, .carousel-indicators */ {
     filter: invert(100%);
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:#ccc; 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}
+
+.btn-logged{
+    background-color: #5f99c5;
 }
 
 
