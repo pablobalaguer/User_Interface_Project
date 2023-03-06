@@ -563,6 +563,41 @@
                 <div class="col-2"></div>
             </div>
         </div>
+
+        <div class="container my-4 p-4 border" id="displayconstraints">
+            <div class="block-half-vertical mt-4 text-center" id="constraintsDisplay">
+              <div class="half-block centered">
+                <h3>Pitch Constraints</h3>
+                <ul id="pitch-constraints" style="list-style-type: none;" ></ul>
+              </div>
+              <div class="half-block centered">
+                <h3>Duration Constraints</h3>
+                <ul id="dur-constraints" style="list-style-type: none;"> </ul>
+              </div>
+            </div>
+
+            <style>
+              .block-half-vertical {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+              }
+              .half-block {
+                width: 48%;
+              }
+
+            </style>
+        </div>
+
+        <div class="row mt-4 text-center" style="height: 80px;" id="nextPageButton">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-lg btn-dark" onclick="document.location.href='{{url_for('choose_project')}}';">
+                        Continue
+                    </button>
+                </div>
+                <div class="col-4"></div>
+        </div>
     </main>
     <footer class="text-center text-white border-top" style="background-color: #5f99c5; ">
         <div class="container-fluid justify-content-center">
