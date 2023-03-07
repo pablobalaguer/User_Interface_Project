@@ -38,7 +38,7 @@
                                     class="fa fa-home fa-lg"></i></a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class="btn btn-outline-light btn-lg btn-block"> <i class="fa fa-user fa-lg"></i></a>
+                            <a class="btn btn-outline-light btn-lg btn-block" id="userstatusButton"> <i class="fa fa-user fa-lg"></i></a>
                         </li>
                         <li class="nav-item mx-5">
                             <a class="btn btn-outline-light btn-lg btn-block" id="language"> <i
@@ -52,6 +52,9 @@
                     </ul>
                 </div>
             </div>
+        <!--Overlay-->
+        <div class="overlayPopUp" style="position: absolute;"></div>
+        <!---->
         </nav>
     </header>
     <main>
@@ -598,6 +601,54 @@
                 </div>
                 <div class="col-4"></div>
         </div>
+        <!--User Status Form-->
+        <div class="container py-4 rounded popup" style="background-color: white;" id="UserStatusID">
+            <div class="row">
+                <div class="col-11"></div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-outline-dark btn-lg border-0 closeUserStatusForm">&times;</button>
+                </div>
+            </div>
+            <div class="row">
+                <h1 class="display-4 fw-bold text-center mb-4">User status</h1>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-1"></div>
+                <div class="col-7 align-items-center">
+                    <h4 class="mb-2">Username</h4>
+                    <label class="mb-4"><b> {{ rendTempUsername }} </b></label>
+                    
+					<h4 class="mb-2">Email</h4>
+                    <label class="mb-4"><b> {{ rendTempEmail }} </b></label>
+					
+                    <h4 class="mb-2">Uploaded MIDI Files</h4>
+                    <label id="midiFilesLabel">{{ stringMIDI }}</label>
+                </div>
+                <div class="col-4 justify-items-center">
+                    <img src="static/images/radiocassete.png" class="img-fluid"
+                        style="margin-left: auto; margin-right: auto; display: block;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4 text-center">
+                    <div class="row">
+                        <button class="btn btn-outline-dark btn-lg w-100 btn-block mt-4 mb-4 closeUserStatusForm">
+                            Close status
+                        </button>
+                        <small class="form-text text-muted mb-4">Wrong account? <button id="logoutButton" style="background: none; border: none;"> <b>Log out</b> </button></small>
+                    </div>
+                    <div class="row">
+                        <button id="deleteButton" style="background: none; border: none; color: #Ff1810;"> <b>Delete this account</b> </button>
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+        </div>
+        <!---->
+        <!--Overlay-->
+        <div class="overlayPopUp" style="position: fixed;"></div>
+        <!---->
     </main>
     <footer class="text-center text-white border-top" style="background-color: #5f99c5; ">
         <div class="container-fluid justify-content-center">

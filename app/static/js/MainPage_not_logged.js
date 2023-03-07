@@ -412,7 +412,6 @@ new ScrollMagic.Scene({
                     }
                 }
             };
-            //Syncronous, we need to wait for the response to act
             xmlhttp.open("GET", strngUserPassw);
             xmlhttp.send();
 

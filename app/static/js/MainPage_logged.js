@@ -186,7 +186,7 @@ new ScrollMagic.Scene({
 
     if(closeuserstatusColl){
         for(var i = 0; i < closeuserstatusColl.length; i++){
-            closeuserstatusColl[i].addEventListener('click', clicked);
+            closeuserstatusColl[i].addEventListener('click', crossbar);
             closeuserstatusColl[i].addEventListener('click', closeTheUserStatusForm);
         }
     }
@@ -214,6 +214,7 @@ new ScrollMagic.Scene({
                 overlayCollection[i].classList.add("active");
             }
             userstatusFormPopup.classList.add("open-popup");
+            body.style.overflow = "hidden";
     }
 
     function closeTheUserStatusForm(){
@@ -227,10 +228,12 @@ new ScrollMagic.Scene({
     }
 
     //enable/disable continue button depending on what option is selected and if we have uploaded MIDI Files (if train is selected)
+    //change the ContinueButton.onclick function depending on what we selected
     let MIDIRadioButton = document.getElementById("IDradioMIDI");
     let CheckpointRadioButton = document.getElementById("IDradioCheckpoint");
     let continueButton = document.getElementById("contButton");
     let midiFilesRow = document.getElementById("midiFilesRow");
+    let midiLabel = document.getElementById("midiFilesLabel");
 
     if(MIDIRadioButton){
         MIDIRadioButton.addEventListener('click', continueEnableDisable)
@@ -244,9 +247,11 @@ new ScrollMagic.Scene({
         if(CheckpointRadioButton.checked){
             continueButton.classList.remove('disabled-general');
             midiFilesRow.classList.add('disabled-general');
+            continueButton.setAttribute("onclick", "document.location.href='/checkpointSelected';")
         }
         else {
             midiFilesRow.classList.remove('disabled-general');
+            continueButton.setAttribute("onclick", "document.location.href='/0';")
             checkIfMidiUpld();
         }
     }
@@ -264,6 +269,7 @@ new ScrollMagic.Scene({
                     }else{
                         continueButton.classList.add('disabled-general');
                     }
+                    midiLabel.innerHTML = jsonResponse['midis'];
                 }
             }
         };
@@ -304,7 +310,10 @@ function deleteAccount(){
     };
     xmlhttpRetrUser.send();
 }
-      
+
+
+//Change the status of the MIDI Files uploaded 
+
     
 
    

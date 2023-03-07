@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PJ/tnd2E/GYe1l1YfgB4BVL1wSAcJ25ztT4kALs/2lXskldPTBv2OQ4yX/1EtVfQM+7A2gg1NWMZwF+EbDG5DQ==",
+  "dgSpecHash": "GbMbgUdXIZ04KCcmmUcE9Ks3M7h1zvEoNHyL8hUWcnXZMkCVvmCC4691MP/izTIKob8b0xi5uwqL+8KR1FjqxA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Pablo\\Desktop\\Catalog\\Catalog.csproj",
+  "projectFilePath": "C:\\Users\\Pablo\\Desktop\\User_Interface_Project\\Catalog\\Catalog.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Pablo\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\Pablo\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

@@ -17,7 +17,10 @@ UserIsLogged = False
 sessionUser = ""
 sessionEmail = ""
 sessionPassword = ""
-
+#this is to update the list of MIDI Files that the user uploaded
+midiFilesList = []
+#this variable will determine if you train the model or if you simply use the checkpoint
+training = True
 
 '''
 homepage_not_log route, whenever you open https://localhost:port/, it will open this homepage
@@ -32,10 +35,14 @@ def homepage_not_log():
     global sessionUser 
     global sessionEmail 
     global sessionPassword 
+    global midiFilesList
+    global training
     UserIsLogged = False
     sessionUser = ""
     sessionEmail = ""
     sessionPassword = ""
+    midiFilesList = []
+    training = True
     return render_template('homepage_not_logged.html')
 
 @app.route('/postuserdata', methods=['POST'])
@@ -64,13 +71,17 @@ def getuserdata():
 @app.route('/checkIfMidiUploaded', methods=['GET'])
 @cross_origin(origin='*')
 def midiuploaded():
+    global midiFilesList
     midiUpl = False
     cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish()
     for f in os.scandir(directory):
         if (f.is_file() and f.name.endswith('.mid')):
+            if f.name not in midiFilesList:
+                midiFilesList.append(f.name)
+
             midiUpl = True
     
-    response = jsonify(answer=midiUpl)  
+    response = jsonify(answer=midiUpl, midis=' '.join(midiFilesList))  
     return response
 
 @app.route('/userstatus', methods=['GET'])
@@ -84,30 +95,33 @@ def redirect_user():
 def homepage_log(inputUsername):
     return render_template('homepage_logged.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail)
 
-'''
-Constraints choosing route. Opened when the button 'Continue' is clicked from the mainpage 
-See homepage.html button 'Continue' to see the link
-'''
-#WE CAN DELETE THIS PART I GUESS
-@app.route('/constraints', methods=['GET', 'POST'])
-def fileProcess():
-    if not UserIsLogged:
-        flash("You must log in", 'danger')      # flask.flash is used to display messages, but isn't working right now
-        return(redirect(url_for('homepage_not_log')))
 
-    # Process the midifiles in the folder
-    # midi_files_checker_music21.py was changed to add the process function (main)
-    midi_files_checker_music21.process()
-    return render_template('constraints_flask_webpage.html')
+#PREVIOUS VERSION OF CONSTRAINTS PART
+#@app.route('/constraints', methods=['GET', 'POST'])
+#def fileProcess():
+#    if not UserIsLogged:
+#        flash("You must log in", 'danger')      # flask.flash is used to display messages, but isn't working right now
+#        return(redirect(url_for('homepage_not_log')))
+#
+#    # Process the midifiles in the folder
+#    # midi_files_checker_music21.py was changed to add the process function (main)
+#    midi_files_checker_music21.process()
+#    return render_template('constraints_flask_webpage.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail)
 
 
 '''
 Constraints choosing route. Opened when the button 'Continue' is clicked from the mainpage 
 See homepage.html button 'Continue' to see the link
 '''
+#if TRAIN ALGORITHM is selected, so we process the MIDI Files
+#Check MainPage_logged.js, continueEnableDisable() function to see how this works
 @app.route('/<int:firstprocess>', methods=['GET', 'POST'])
 def fileProcessNew(firstprocess):
-
+    global midiFilesList
+    global training
+    #variable training to True, we will train the algorithm with the MIDI Files we have in the user's folder
+    training = True
+    #if we train the algorythm
     # we establish our paths
     print('files processing')
     print(type(firstprocess),firstprocess)
@@ -134,8 +148,21 @@ def fileProcessNew(firstprocess):
 
     #we delete the MIDI FIles we could not move (the raw ones with M&C)
     mfpm.delete_folder_if_exists(path_MIDI_garbage)
-    return render_template('constraints_flask_webpage.html')
+    return render_template('constraints_flask_webpage.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
+#if CHECKPOINT is selected, so we delete the MIDI Files and we do not pass throught PartsChoosing
+#Check MainPage_logged.js, continueEnableDisable() function to see how this works
+@app.route('/checkpointSelected', methods=['GET', 'POST'])
+def checkpointSelected():
+    global midiFilesList
+    global training
+    #variable training to False, we will use the CHECKPOINT (this is for further design, once you have to deal with the Cluster)
+    #note that we delete the folder with the MIDI Files because they are no longer needed, due to we use the checkpoint
+    training = False
+    midiFilesList = []
+    midiFilesList.append("CHECKPOINT SELECTED")
+    recreateFolder(os.getcwd(), '/midi_files_checking')
+    return render_template('constraints_flask_webpage.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
 '''
 Midi file parts choosing (for processing) route
@@ -197,17 +224,17 @@ def receive_midi_file():
 
 @app.route("/chooseProject", methods=["GET", "POST"])
 def choose_project():
-    return render_template('project_choosing.html')
+    return render_template('project_choosing.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
 @app.route("/CMT", methods=["GET", "POST"])
 def CMT_preprocess():
     print('preprocess cmt')
-    return render_template('project_choosing.html')
+    return render_template('project_choosing.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
 @app.route("/RL", methods=["GET", "POST"])
 def RL_Tuner_preprocess():
     print('preprocess rltuner')
-    return render_template('project_choosing.html')
+    return render_template('project_choosing.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
 #FUNCTIONS USED WITHOUT ROUTING
 
