@@ -9,7 +9,7 @@ from flask import jsonify
 import os
 #from werkzeug.urls import url_parse, secure_filename
 from app import app
-from app import midi_files_checker_music21
+#from app import midi_files_checker_music21
 from app import midi_files_proc_music21 as mfpm
 from flask_cors import CORS, cross_origin
 
@@ -29,8 +29,6 @@ homepage_not_log route, whenever you open https://localhost:port/, it will open 
 #We add the CORS package to solve the problems of CORS policy when we make Request to the Flask functions
 @cross_origin(origin='*')
 def homepage_not_log():
-    #Make sure that when we open the webpage for the first time there's any MIDI File in the Folder where we store the MIDI FIles before the Continue button
-    recreateFolder(os.getcwd(), '/midi_files_checking')
     global UserIsLogged    
     global sessionUser 
     global sessionEmail 
@@ -73,7 +71,7 @@ def getuserdata():
 def midiuploaded():
     global midiFilesList
     midiUpl = False
-    cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish()
+    cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish(sessionUser)
     for f in os.scandir(directory):
         if (f.is_file() and f.name.endswith('.mid')):
             if f.name not in midiFilesList:
@@ -93,6 +91,10 @@ def redirect_user():
     
 @app.route('/<string:inputUsername>', methods=['GET'])
 def homepage_log(inputUsername):
+    #Make sure that when we log the user for the first time there's any MIDI File in the Folder where we store the MIDI FIles before the Continue button
+    recreateFolder(os.getcwd(), '/users/' + sessionUser)
+    userpath = os.getcwd() + '/users/' + sessionUser
+    recreateFolder(userpath, '/midi_files_checking')
     return render_template('homepage_logged.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail)
 
 
@@ -125,7 +127,7 @@ def fileProcessNew(firstprocess):
     # we establish our paths
     print('files processing')
     print(type(firstprocess),firstprocess)
-    cwd, directory, path_om, path_cm, path_MIDI_garbage = mfpm.path_establish()
+    cwd, directory, path_om, path_cm, path_MIDI_garbage = mfpm.path_establish(sessionUser)
 
     if (firstprocess == 0):
         # we check if the files where we have to store the MIDI files have been created previously, in order to delete them and its content
@@ -161,7 +163,8 @@ def checkpointSelected():
     training = False
     midiFilesList = []
     midiFilesList.append("CHECKPOINT SELECTED")
-    recreateFolder(os.getcwd(), '/midi_files_checking')
+    userpath = os.getcwd() + '/users/' + sessionUser
+    recreateFolder(userpath, '/midi_files_checking')
     return render_template('constraints_flask_webpage.html', rendTempUsername = sessionUser, rendTempEmail = sessionEmail, stringMIDI = ' '.join(midiFilesList))
 
 '''
@@ -171,7 +174,7 @@ Midi file parts choosing (for processing) route
 def ChooseParts():
     userinput = int(request.form['text'])
     print('received'+ str(userinput))
-    cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish()
+    cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish(sessionUser)
 
     for f in os.scandir(directory):
         if (f.is_file() and f.name.endswith('.mid')):
@@ -198,7 +201,7 @@ in MainPage.js sends a POST request to /saveMidFile with the files.
 def receive_midi_file():
     # Change working directory to save midi files to /midi_files_checking
     cwd = os.getcwd().replace('\\', '/')
-    os.chdir(cwd + '/midi_files_checking')
+    os.chdir(cwd +'/users/' + sessionUser +'/midi_files_checking')
     # Receive the request and get data
     data_received = request.get_data()
     filename = (str(data_received).split('filename="')[1]).split('"\\')[0]
@@ -221,6 +224,27 @@ def receive_midi_file():
     #MAYBE IT'S INTERESTING HERE TO RETURN THE NAME OF ALL THE MIDI FILES UPLOADED!
     return ""
 
+'''
+Delete the MIDI File selected by the user.
+'''
+@app.route("/deleteMidiFile", methods=["POST"])
+def delete_midifile():
+    global midiFilesList
+    found = False
+    data_received = request.json
+    midiFileToDelete = data_received["Filename"]
+    cwd,directory,path_om,path_cm,path_MIDI_garbage = mfpm.path_establish(sessionUser)
+
+    for f in os.scandir(directory):
+        if (f.is_file() and f.name.endswith('.mid') and not found):
+            if f.name == midiFileToDelete:
+                path_to_file = str(f.path)
+                #once we find it we delete the MIDI File
+                delete_MIDI_path(path_to_file)
+                midiFilesList.remove(f.name)
+                found = True
+
+    return ""
 
 @app.route("/chooseProject", methods=["GET", "POST"])
 def choose_project():
@@ -244,3 +268,6 @@ def recreateFolder(cwd_path, folder):
     #After we recreate it again
     mfpm.create_folder_if_not_exists(cwd_path + folder)
 
+def delete_MIDI_path(path_in):
+    if os.path.exists(path_in):
+        os.remove(path_in)

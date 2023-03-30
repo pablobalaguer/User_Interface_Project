@@ -51,9 +51,9 @@ def create_folder_if_not_exists(path_in):
     if(os.path.exists(path_in) == False):
         os.mkdir(path_in)
 
-def path_establish():
+def path_establish(username):
     cwd = os.getcwd().replace('\\', '/')
-    directory = cwd + '/midi_files_checking'
+    directory = cwd + '/users/' + username + '/midi_files_checking'
     path_om = directory + "/only_melody_midi"
     path_cm = directory + "/chords_melody_midi"
     path_MIDI_garbage = directory + "/garbage"

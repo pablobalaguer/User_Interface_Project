@@ -169,6 +169,12 @@
                         <label class="form-label text-muted">We will preprocess them, no worries</label>
                         <input class="form-control form-control-lg" type="file" multiple accept=".mid" id="formFileLg">
                     </div>
+                    <div class="container my-4" id="displayMIDI">
+                        <hr />
+                        <div class="container-fluid text-left my-4">
+                            <ul id="midifileslist" style="list-style-type: none;" ></ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-check border rounded">
                     <input class="form-check-input m-4" type="radio" name="radioMIDICheckpoint" id="IDradioCheckpoint">
@@ -202,7 +208,7 @@
                     <label class="mb-4"><b> {{ rendTempEmail }} </b></label>
 					
                     <h4 class="mb-2">Uploaded MIDI Files</h4>
-                    <label id="midiFilesLabel">prueba</label>
+                    <label id="midiFilesLabel"></label>
                 </div>
                 <div class="col-4 justify-items-center">
                     <img src="static/images/radiocassete.png" class="img-fluid"

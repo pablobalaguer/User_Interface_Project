@@ -561,7 +561,7 @@ function updatePitchConstraintsDisplay() {
     const li = document.createElement("li");
     li.innerHTML = constraint + "              " + constraint.length;
     const removeButton = document.createElement("button");
-    removeButton.innerHTML = "Remove";
+    removeButton.innerHTML = "&times;";
     removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
     removeButton.addEventListener("click", function() {
       removePitchConstraint(i);
@@ -586,7 +586,7 @@ function updateDurConstraintsDisplay() {
     const li = document.createElement("li");
     li.innerHTML = constraint + "              ";
     const removeButton = document.createElement("button");
-    removeButton.innerHTML = "Remove";
+    removeButton.innerHTML = "&times;";
     removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px;";
     removeButton.addEventListener("click", function() {
       removeDurConstraint(i);

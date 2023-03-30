@@ -23,24 +23,30 @@ if(MIDIloadButton){
         for(var i = 0; i < MIDIloadButton.files.length; i++) {
             const midiFile = MIDIloadButton.files[i];
             alert("File selected: " + midiFile.name);
-            sendMIDIFile(midiFile, midiFile.name, i, MIDIloadButton.files.length);
+            sendMIDIFile(midiFile, i, MIDIloadButton.files.length);
         }
     });
 }
 
 // Send a POST request with midifile to the flask function
-function sendMIDIFile(midiFile,midiFileName, i, MidiTotalNumber) {
+function sendMIDIFile(midiFile, index, midilength) {
   try{
-
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "http://localhost:5014/saveMidFile", true);
       const formData = new FormData(); // creates a form object
       formData.append('midifile', midiFile);
-      xhr.send(formData);
-      if(i == (MidiTotalNumber - 1)){
-        //Only when send the last MIDI File we check if there's any MIDI file already uploaded
-        checkIfMidiUpld();
+      //only once we got the last POST reply we execute the function
+      if(index == (midilength - 1)){
+        xhr.onreadystatechange = () => {
+            if(xhr.readyState === XMLHttpRequest.DONE){
+                if(xhr.status === 200){
+                    checkIfMidiUpld();
+                }
+            }
+        };
       }
+      xhr.send(formData);
+      
   }
   catch(err){
     alert(err)
@@ -252,11 +258,12 @@ new ScrollMagic.Scene({
         else {
             midiFilesRow.classList.remove('disabled-general');
             continueButton.setAttribute("onclick", "document.location.href='/0';")
-            checkIfMidiUpld();
+            setTimeout(checkIfMidiUpld(), 3000);
         }
     }
     
     function checkIfMidiUpld(){
+        
         xmlhttpmidi = new XMLHttpRequest();
         xmlhttpmidi.responseType = 'json';
         xmlhttpmidi.open("GET", "http://localhost:5014/checkIfMidiUploaded");
@@ -270,6 +277,8 @@ new ScrollMagic.Scene({
                         continueButton.classList.add('disabled-general');
                     }
                     midiLabel.innerHTML = jsonResponse['midis'];
+                    updateMidiArray(jsonResponse['midis']);
+                    
                 }
             }
         };
@@ -313,8 +322,56 @@ function deleteAccount(){
 
 
 //Change the status of the MIDI Files uploaded 
+midiArray = []
+midiFilesListDisplay = document.getElementById("midifileslist");
 
+function updateMidiArray(midi){
+    //if we do not upload any MIDI File the response will be "", so we do not store it
+    if(midi == ""){}
+    else{
+        let substrings = midi.split(" ");
+        for(var i = 0; i < substrings.length; i++){
+            let substr = substrings[i];
+            if(!midiArray.includes(substr)){
+                midiArray.push(substr);
+            }
+        }
+        updateMIDIFilesDisplay();
+    }
+}
+
+function updateMIDIFilesDisplay(){
+    midiFilesListDisplay.innerHTML = "";
+    if(midiArray.length == 0){
+        //once we delete all the MIDI Files we can not continue if we have the Upload MIDI Files selected
+        //Continue button will be available again only if we upload more MIDI Files or if we select the CHECKPOINT
+        continueButton.classList.add('disabled-general');
+    } else {
+        for(let j = 0; j < midiArray.length; j++){
+            currentMidiFile = midiArray[j];
+            li = document.createElement("li");
+            li.innerHTML = currentMidiFile;
+            removeButton = document.createElement("button");
+            removeButton.innerHTML = "&times;";
+            removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
+            removeButton.addEventListener("click", () => {
+                removeMIDIFile(j);
+            });
+            li.appendChild(removeButton);
+            midiFilesListDisplay.appendChild(li);
+        }
+    }
     
+}
+
+function removeMIDIFile(index) {
+    httpRemoveMidi = new XMLHttpRequest();
+    httpRemoveMidi.open("POST", "http://127.0.0.1:5014/deleteMidiFile");
+    httpRemoveMidi.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    httpRemoveMidi.send(JSON.stringify({"Filename": midiArray[index]}));
+    midiArray.splice(index, 1);
+    updateMIDIFilesDisplay();
+}
 
    
     
