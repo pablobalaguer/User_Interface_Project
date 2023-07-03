@@ -124,19 +124,19 @@ if (measurebck) {
                 else { //when we select the second group of measurements directly select the group of measurements where the constraint it's applied
                     //when we mark the checkbox (switchSeparatedMeasure) we store in the checkbox the activeMeasureCounter() value
                     let measuresFirstGroupLength = parseInt(switchSepMeasure.value);
-                    let measuresSecondGroupLenght;
+                    let measuresSecondGroupLength;
                     switch (durSepSelector.selectedIndex) {
                         case 2: //Double up each duration
-                            measuresSecondGroupLenght = 2 * measuresFirstGroupLength;
+                            measuresSecondGroupLength = 2 * measuresFirstGroupLength;
                             break;
                         case 3: //Halve each duration
-                            measuresSecondGroupLenght = Math.round((measuresFirstGroupLength/2));
+                            measuresSecondGroupLength = Math.round((measuresFirstGroupLength/2));
                             break;
                         default: 
-                        measuresSecondGroupLenght = measuresFirstGroupLength;
+                        measuresSecondGroupLength = measuresFirstGroupLength;
                     }
-                    if((i > firstGroupSepMes[(firstGroupSepMes.length - 1)]) && (i + measuresSecondGroupLenght) <= numberMeasuresDisplayed()){
-                        activeSecondGroupMeasures(i, measuresSecondGroupLenght);
+                    if((i > firstGroupSepMes[(firstGroupSepMes.length - 1)]) && (i + measuresSecondGroupLength) <= numberMeasuresDisplayed()){
+                        activeSecondGroupMeasures(i, measuresSecondGroupLength);
                     }
                 }   
             }
@@ -556,10 +556,13 @@ function saveConstraint() {
 function updatePitchConstraintsDisplay() {
   const constraintsList = document.getElementById("pitch-constraints");
   constraintsList.innerHTML = "";
+  let pitch = true;
   for (let i = 0; i < pitchConstraints.length; i++) {
+    /*
     const constraint = pitchConstraints[i];
     const li = document.createElement("li");
-    li.innerHTML = constraint + "              " + constraint.length;
+    li.innerHTML = constraint;
+    li.classList.add("border px-2 my-2");
     const removeButton = document.createElement("button");
     removeButton.innerHTML = "&times;";
     removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
@@ -568,8 +571,49 @@ function updatePitchConstraintsDisplay() {
     });
     li.appendChild(removeButton);
     constraintsList.appendChild(li);
+    */
+    li = createDiv(pitchConstraints[i], i, pitch);
+    constraintsList.appendChild(li);
   }
 }
+
+function createDiv(stringConstraint, index, pitch) {
+    const li = document.createElement("li");
+    li.classList.add("border");
+    li.classList.add("border-dark");
+    li.classList.add("px-2");
+    li.classList.add("my-2");
+    const removeButton = document.createElement("button");
+    removeButton.innerHTML = "&times;";
+    removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
+    removeButton.addEventListener("click", function() {
+        if(pitch){
+            removePitchConstraint(index);
+        }
+        else {
+            removeDurConstraint(index);
+        }
+    });
+    let cfluid = document.createElement("div");
+    cfluid.classList.add("container-fluid");
+    cfluid.classList.add("justify-content-center");
+    let row = document.createElement("div");
+    row.classList.add("row");
+    let col10 = document.createElement("div");
+    col10.classList.add("col-10");
+    col10.classList.add("align-self-center");
+    let col2 = document.createElement("div");
+    col2.classList.add("col-2");
+
+    col2.appendChild(removeButton);
+    col10.innerHTML = "<b>" + stringConstraint + "</b>";
+    row.appendChild(col10);
+    row.appendChild(col2);
+    cfluid.appendChild(row);
+    li.appendChild(cfluid);
+    return li;
+}
+
 
 function removePitchConstraint(index) {
   pitchConstraints.splice(index, 1);
@@ -581,7 +625,9 @@ function removePitchConstraint(index) {
 function updateDurConstraintsDisplay() {
   const constraintsList = document.getElementById("dur-constraints");
   constraintsList.innerHTML = "";
+  let pitch = false;
   for (let i = 0; i < durationConstraints.length; i++) {
+    /*
     const constraint = durationConstraints[i];
     const li = document.createElement("li");
     li.innerHTML = constraint + "              ";
@@ -592,6 +638,9 @@ function updateDurConstraintsDisplay() {
       removeDurConstraint(i);
     });
     li.appendChild(removeButton);
+    constraintsList.appendChild(li);
+    */
+    li = createDiv(durationConstraints[i], i, pitch);
     constraintsList.appendChild(li);
   }
 }
@@ -677,7 +726,7 @@ if(logoutButton){
 
 function logout(){
     //Simply go to the homepage_not_logged
-    window.location.href = "http://127.0.0.1:5014/";
+    goToMainPage();
 }
 
 function clicked() {
@@ -714,30 +763,24 @@ if(deleteButton){
 }
 
 function deleteAccount(){
-    //First Retrieve the user data from FLask(session) and delete the account from the API
-    xmlhttpRetrUser = new XMLHttpRequest();
-    xmlhttpRetrUser.responseType = 'json';
-    xmlhttpRetrUser.open("GET", "http://localhost:5014/getuserdata");
-    xmlhttpRetrUser.onreadystatechange = () => {
-        if(xmlhttpRetrUser.readyState === XMLHttpRequest.DONE){
-            if(xmlhttpRetrUser.status === 200){
-                //once we retrieve the data we can send the DELETE request to the API
-                var jsonResponse = xmlhttpRetrUser.response;
-                urlUser = "http://localhost:5000/api/users/byparameters?username=" + jsonResponse['username'] + "&password=" + jsonResponse['password']
-                xmlhttpDeleteUser = new XMLHttpRequest();
-                xmlhttpDeleteUser.open("DELETE", urlUser);
-                xmlhttpDeleteUser.onreadystatechange = () => {
-                    if(xmlhttpDeleteUser.readyState === XMLHttpRequest.DONE){
-                        if(xmlhttpDeleteUser.status === 204){
-                            //when the request to the API has succeded, it returns a 204 No Content, because it has been deleted
-                            //Only when it has been deleted we can come back to the Main Page
-                            window.location.href = "http://127.0.0.1:5014/";    
-                        }
-                    }
-                };
-                xmlhttpDeleteUser.send();
+    //we ask the server to delete our user, and the server will contact the API. No need to send any info about the user, he already knows
+    xmlhttpDeleteUser = new XMLHttpRequest();
+    xmlhttpDeleteUser.open("GET", "http://127.0.0.1:5014/deleteAccount");
+    xmlhttpDeleteUser.onreadystatechange = () => {
+        if(xmlhttpDeleteUser.readyState === XMLHttpRequest.DONE){
+            if(xmlhttpDeleteUser.status === 204){
+                //when the request to the SERVER has succeded, it returns a 204 No Content, because it has been deleted
+                //Only when it has been deleted we can come back to the Main Page
+                goToMainPage();   
             }
         }
     };
-    xmlhttpRetrUser.send();
+    xmlhttpDeleteUser.send();
+}
+
+function goToMainPage(){
+
+//we load this URL, that is going to load the homepage without any user logged
+window.location.href = "http://127.0.0.1:5014/";     
+
 }

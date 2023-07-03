@@ -1,8 +1,10 @@
 /*TYPEWRITTING EFFECTS are on the JS page*/
 
+/*
 #bodyID {
     overflow: visible;
 }
+*/
 
 .btn-circle-pablo {
 
@@ -151,6 +153,7 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
+
 .overlayPopUp {
     z-index: 9;
     opacity: 0;
@@ -260,9 +263,81 @@ input[type=submit] {
     background-color: #5f99c5;
 }
 
+#midifileslist{
+    list-style-type:none;
+}
 
+#midifileslist li{
+    float: left;
+}
 
+@keyframes transitionImageToButton {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #myButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  #myButton.show {
+    opacity: 1;
+  }
 
+  @keyframes transitionImageToButton {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #contButtonCluster {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  #contButtonCluster.show {
+    opacity: 1;
+  }
 
+  #contButtonCluster:hover {
+    background-color: #554b4b;
+    color: #fff;
+  }
 
+  .same-size-button {
+    width: 180px;
+    height: 50px;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  }
 
+  .genAnotMidi:hover {
+    filter: brightness(120%);
+    border-color: #1A6DAC;
+  }
+  

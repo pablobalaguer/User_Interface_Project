@@ -29,6 +29,8 @@ if(MIDIloadButton){
 }
 
 // Send a POST request with midifile to the flask function
+//it's necessary to send the MIDI Files to the Flask function sequentially bc
+//if we add a counter it can be accessed by both httprequest at the same time and execute the function when it's not needed
 function sendMIDIFile(midiFile, index, midilength) {
   try{
       var xhr = new XMLHttpRequest();
@@ -175,7 +177,6 @@ new ScrollMagic.Scene({
 
     //MAIN PAGE PopUp Forms
 
-    //display Login Form - we use the class name instead of the ID (bc we have multiple login buttons)
     let userStatusButton = document.getElementById("userstatusButton");
     let overlayCollection = document.getElementsByClassName("overlayPopUp");
     let userstatusFormPopup = document.getElementById("UserStatusID");
@@ -203,7 +204,7 @@ new ScrollMagic.Scene({
 
     function logout(){
         //Simply go to the homepage_not_logged
-        window.location.href = "http://127.0.0.1:5014/";
+        goToMainPage();
     }
 
     function clicked() {
@@ -240,6 +241,7 @@ new ScrollMagic.Scene({
     let continueButton = document.getElementById("contButton");
     let midiFilesRow = document.getElementById("midiFilesRow");
     let midiLabel = document.getElementById("midiFilesLabel");
+    let usernameString = (document.getElementById("idusername").innerHTML).replace(/\s+/g, '');
 
     if(MIDIRadioButton){
         MIDIRadioButton.addEventListener('click', continueEnableDisable)
@@ -253,7 +255,7 @@ new ScrollMagic.Scene({
         if(CheckpointRadioButton.checked){
             continueButton.classList.remove('disabled-general');
             midiFilesRow.classList.add('disabled-general');
-            continueButton.setAttribute("onclick", "document.location.href='/checkpointSelected';")
+            continueButton.setAttribute("onclick", "document.location.href='/"+ usernameString + "/checkpointSelected';");
         }
         else {
             midiFilesRow.classList.remove('disabled-general');
@@ -292,32 +294,26 @@ if(deleteButton){
 }
 
 function deleteAccount(){
-    //First Retrieve the user data from FLask(session) and delete the account from the API
-    xmlhttpRetrUser = new XMLHttpRequest();
-    xmlhttpRetrUser.responseType = 'json';
-    xmlhttpRetrUser.open("GET", "http://localhost:5014/getuserdata");
-    xmlhttpRetrUser.onreadystatechange = () => {
-        if(xmlhttpRetrUser.readyState === XMLHttpRequest.DONE){
-            if(xmlhttpRetrUser.status === 200){
-                //once we retrieve the data we can send the DELETE request to the API
-                var jsonResponse = xmlhttpRetrUser.response;
-                urlUser = "http://localhost:5000/api/users/byparameters?username=" + jsonResponse['username'] + "&password=" + jsonResponse['password']
+                //we ask the server to delete our user, and the server will contact the API. No need to send any info about the user, he already knows
                 xmlhttpDeleteUser = new XMLHttpRequest();
-                xmlhttpDeleteUser.open("DELETE", urlUser);
+                xmlhttpDeleteUser.open("GET", "http://127.0.0.1:5014/deleteAccount");
                 xmlhttpDeleteUser.onreadystatechange = () => {
                     if(xmlhttpDeleteUser.readyState === XMLHttpRequest.DONE){
                         if(xmlhttpDeleteUser.status === 204){
-                            //when the request to the API has succeded, it returns a 204 No Content, because it has been deleted
+                            //when the request to the SERVER has succeded, it returns a 204 No Content, because it has been deleted
                             //Only when it has been deleted we can come back to the Main Page
-                            window.location.href = "http://127.0.0.1:5014/";    
+                            goToMainPage();   
                         }
                     }
                 };
                 xmlhttpDeleteUser.send();
-            }
-        }
-    };
-    xmlhttpRetrUser.send();
+}
+
+function goToMainPage(){
+
+    //we load this URL, that is going to load the homepage without any user logged
+    window.location.href = "http://127.0.0.1:5014/";     
+
 }
 
 
@@ -345,12 +341,13 @@ function updateMIDIFilesDisplay(){
     if(midiArray.length == 0){
         //once we delete all the MIDI Files we can not continue if we have the Upload MIDI Files selected
         //Continue button will be available again only if we upload more MIDI Files or if we select the CHECKPOINT
-        continueButton.classList.add('disabled-general');
+        //We recall the function just in case we are deleting the MIDI Files when we have the checkpoint selected
+        continueEnableDisable();
     } else {
         for(let j = 0; j < midiArray.length; j++){
             currentMidiFile = midiArray[j];
             li = document.createElement("li");
-            li.innerHTML = currentMidiFile;
+            li.classList.add("mb-4");
             removeButton = document.createElement("button");
             removeButton.innerHTML = "&times;";
             removeButton.style.cssText  = "background-color: #9b1c31;color: #fff;font-size: 15px;border: none;border-radius: 5px;padding: 2px 6px;cursor: pointer;text-align: center;text-decoration: none;display: inline-block;transition-duration: 0.4s;margin: 10px; ";
@@ -358,10 +355,31 @@ function updateMIDIFilesDisplay(){
                 removeMIDIFile(j);
             });
             li.appendChild(removeButton);
+            imgAndSample(li, currentMidiFile);
             midiFilesListDisplay.appendChild(li);
         }
     }
     
+}
+
+//function that creates another ul (unordered list), and after we append 2 li, one with the image and the other one with the sample's name
+function imgAndSample(liToAppend, sampletext){
+    ulimgandtext = document.createElement("ul");
+    ulimgandtext.style = "list-style-type: none;";
+    //ulimgandtext.classList.add("border");
+    //ulimgandtext.classList.add("rounded");
+    liimg = document.createElement("li");
+    liimg.style = "float: none";
+    lisampletext = document.createElement("li");
+    lisampletext.style = "float: none";
+    img = new Image(50, 50);
+    img.src = "static/images/midifile.png";
+    img.classList.add("img-fluid");
+    liimg.append(img);
+    lisampletext.innerHTML = sampletext;
+    ulimgandtext.append(liimg);
+    ulimgandtext.append(lisampletext);
+    liToAppend.append(ulimgandtext);
 }
 
 function removeMIDIFile(index) {

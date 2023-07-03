@@ -43,7 +43,7 @@ if(logoutButton){
 
 function logout(){
     //Simply go to the homepage_not_logged
-    goToMainPage(); 
+    goToMainPage();
 }
 
 function clicked() {
@@ -101,3 +101,19 @@ function goToMainPage(){
 window.location.href = "http://127.0.0.1:5014/";     
 
 }
+
+//JS that makes the Continue button appear once some time passes
+
+setTimeout(function() {
+    var loadingImage = document.getElementById("loading");
+    var contButton = document.getElementById("contButtonCluster");
+    loadingImage.style.animation = "transitionImageToButton 0.5s forwards";
+  
+    setTimeout(function() {
+      loadingImage.remove();
+      contButton.classList.remove("hidden");
+      contButton.classList.add("show");
+    }, 500);
+  }, 5000);
+  
+  

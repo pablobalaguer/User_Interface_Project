@@ -101,3 +101,56 @@ function goToMainPage(){
 window.location.href = "http://127.0.0.1:5014/";     
 
 }
+
+//CODE Related to the MIDI File treatment
+
+const midiFilePath = 'static/midi_1s_4.mid';
+const mp3FilePath = 'static/midi_1s_4.mp3';
+// Retrieve the button element using getElementById
+const playButton = document.getElementById("playButton");
+
+// Add event listener to the button
+playButton.addEventListener("click", toggleAudio);
+
+
+// Create a new Tone.Player instance
+const player = new Tone.Player(mp3FilePath).toDestination();
+
+let isPlaying = false;
+
+function toggleAudio() {
+    if (!isPlaying) {
+      // Start playback
+      Tone.start();
+      player.start();
+      playButton.textContent = "Stop MIDI";
+    } else {
+      player.stop();
+      playButton.textContent = "Play MIDI";
+    }
+  
+    isPlaying = !isPlaying;
+  }
+
+// Download button click event handler
+document.getElementById('downloadButton').addEventListener('click', function() {
+  // Create a link element
+  const link = document.createElement('a');
+  link.href = midiFilePath;
+  link.download = 'midi_generated_by_cluster.mid'; // Set the desired file name for download
+  link.click(); // Trigger the download
+});
+
+
+//Generate another MIDI Button
+
+// JavaScript code
+const genAnotMidi = document.getElementById("genAnotMidi");
+
+genAnotMidi.addEventListener("click", function() {
+    window.location.href = "http://127.0.0.1:5014/userstatus";    
+});
+
+
+
+  

@@ -245,17 +245,16 @@ new ScrollMagic.Scene({
     //the inputs fields are contained in the inputs Collection
     let signupAPIbutton = document.getElementById("signupAPI");
     let loginAPIbutton = document.getElementById("loginAPI");
-    let urlUsername = "http://127.0.0.1:5000/api/users/byparameters/usr?username=";
-    let urlEmail = "http://127.0.0.1:5000/api/users/byparameters/eml?email=";
+    let urlUsername = "http://127.0.0.1:5014/checkUsername";
+    let urlEmail = "http://127.0.0.1:5014/checkEmail";
 
     
-
+    //we pass the information to the server, he acts as an intermediator between frontend & DB
     function createUser(username, email, password){
-        var url = "http://localhost:5000/api/users/";
         var xmlhttp = new XMLHttpRequest();
         //random number for the cluster ID, between 100 000 000 and 999 999 999
         var clusterNumber = Math.round(Math.random() * (999999999 - 100000000) + 100000000);
-        xmlhttp.open("POST", url);
+        xmlhttp.open("POST", "http://127.0.0.1:5014/createUserAPI");
         xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xmlhttp.onreadystatechange = function() {
             if(xmlhttp.readyState === XMLHttpRequest.DONE){
@@ -263,7 +262,7 @@ new ScrollMagic.Scene({
                     //we proceed to show the new user status on the webpage
                     crossbar();
                     closeTheSignUpForm();
-                    changeToUserStatus(username, email, password);
+                    changeToUserStatus();
                 } else {
                     //we didnt manage to create the user, so we do not do nothing
                     //anyways, we make sure previously that we can create the user
@@ -281,24 +280,24 @@ new ScrollMagic.Scene({
 
     function signupAPI(){
         //check that any input it's empty
-        let anyEmpties = false;
+        let inpEmpty = false;
         for (let i = 0; i < 4; i++){
             if(inputEmpty(i)){
-                anyEmpties = true;
+                inpEmpty = true;
             }
         }
         //if there is any empty input, we proceed to check each input
         //first we want to remark if the passwords match each other
-        if(!anyEmpties) {
+        if(!inpEmpty) {
             //we check if the passwords are equal
             if((inputs[2].value === inputs[3].value) && (inputs[2].value != "")){
                 inputs[2].classList.remove("is-invalid");
                 inputs[2].classList.add("is-valid");
                 inputs[3].classList.remove("is-invalid");
                 inputs[3].classList.add("is-valid");
-                //here we do the HTTP Requests for the username and for the email
-                strngUser = urlUsername + inputs[0].value;
-                strngEm = urlEmail + inputs[1].value;
+                //here we do the HTTP Requests for the username and for the email, to respect the architecture we do the HTTP Request to the Server and he will contact with the DB
+                usernameJSON = JSON.stringify({"Username": inputs[0].value})
+                emailJSON = JSON.stringify({"Email": inputs[1].value})
                 PromisesArr = [new Promise((resolve, reject) => {
                         var httpUsername = new XMLHttpRequest();
                         httpUsername.onreadystatechange = function() {
@@ -318,8 +317,9 @@ new ScrollMagic.Scene({
                                 }
                             }
                         };
-                        httpUsername.open("GET", strngUser);
-                        httpUsername.send();
+                        httpUsername.open("POST", urlUsername);
+                        httpUsername.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        httpUsername.send(usernameJSON);
                     }),
                     new Promise((resolve, reject) => {
                         var httpEmail = new XMLHttpRequest();
@@ -342,15 +342,16 @@ new ScrollMagic.Scene({
                                 }
                             }
                         };
-                        httpEmail.open("GET", strngEm);
-                        httpEmail.send();
+                        httpEmail.open("POST", urlEmail);
+                        httpEmail.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        httpEmail.send(emailJSON);
                     })
                 ];
                 
                 Promise.all([PromisesArr[0], PromisesArr[1]]).then((resp) => {
                      
                     //Both promises returned resolve(), so we can:
-                    //1. POST the new user && CALL THE FLASK FUNCTION AND LOAD THE NEW HOMEPAGE WITH THE USER STATUS AND THE MIDI FILES PART ENABLED
+                    //1. call this function, that is going to call the Flask Server and is going to contact with the DB to create the User
                     createUser(inputs[0].value, inputs[1].value, inputs[2].value);
                      
                 }).catch((err) => {
@@ -372,18 +373,17 @@ new ScrollMagic.Scene({
     
 
     function loginAPI(){
-        let anyEmpties = false;
+        let inpEmpty = false;
         for (let i = 4; i < 6; i++){
             if(inputEmpty(i)){
-                anyEmpties = true;
+                inpEmpty = true;
             }
         }
-        if(!anyEmpties){
-            //here we proceed to determine if the user it's in the SQL Server throught our API
-            strngUserPassw = "http://localhost:5000/api/users/byparameters?username=" + inputs[4].value + "&password=" + inputs[5].value;
+        if(!inpEmpty){
+            jsUser = inputs[4].value;
+            jsPassword = inputs[5].value;
             var xmlhttp = new XMLHttpRequest();
-            //we receive a JSON object
-            xmlhttp.responseType = 'json';
+            //from Flask, we only receive the response status number
             xmlhttp.onreadystatechange = function() {
                 if(xmlhttp.readyState === XMLHttpRequest.DONE){
                     if(xmlhttp.status === 200){ 
@@ -394,11 +394,9 @@ new ScrollMagic.Scene({
                         inputs[5].classList.add("is-valid");
                         feedbckCollection[4].innerHTML= "";
                         feedbckCollection[5].innerHTML= "";
-                        //we store this JSON object in a variable, we can access to the object like a JS object
-                        jsonResponse = xmlhttp.response;
                         crossbar();
                         closeTheLogInForm();
-                        changeToUserStatus(jsonResponse.username, jsonResponse.email, jsonResponse.password);
+                        changeToUserStatus();
             
                     }
                     else if(xmlhttp.status === 404){
@@ -412,11 +410,11 @@ new ScrollMagic.Scene({
                     }
                 }
             };
-            xmlhttp.open("GET", strngUserPassw);
-            xmlhttp.send();
-
+            //connection with the web server (FLASK), he's the one that acts as an intermediator between frontend & API/database
+            xmlhttp.open("POST", "http://127.0.0.1:5014/loginAPI");
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send(JSON.stringify({"Username": jsUser, "Password": jsPassword}));
         }
-
     }
 
     function inputEmpty(index){
@@ -441,18 +439,9 @@ new ScrollMagic.Scene({
     loginbutton[2] = login button inside of the SignUp form
     */
 
-    function changeToUserStatus(inputUser,inputEmail, inputPassword){
+    function changeToUserStatus(){
 
-        //1. POST THE USER related data TO FLASK
-        xmlpostUser = new XMLHttpRequest();
-        xmlpostUser.open("POST", "http://127.0.0.1:5014/postuserdata", false);
-        xmlpostUser.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xmlpostUser.send(JSON.stringify({"Username": inputUser, "Email": inputEmail, "Password": inputPassword}));
-
-        //2. OPEN THAT URL 
-        //Using Flask, if we call with a POST or GET request to an URL
-        //the 'return_template' will give us the HTML Document, instead of rendering the template
-        //only loading directly the URL we can achieve this
+        //we load this URL, that is going to load the homepage with the user logged
         window.location.href = "http://127.0.0.1:5014/userstatus";     
     
     }

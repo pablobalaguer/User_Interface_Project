@@ -11,10 +11,10 @@
     <meta name="author" content="Laboratoire Quosséça">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="yes">
     <title>Poly music generator </title>
-    <link rel="icon" type="image/x-icon" href="static/images/logo_poly.png">
+    <link rel="icon" type="image/x-icon" href="http://127.0.0.1:5014/static/images/logo_poly.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/css/pablostyles.css">
+    <link rel="stylesheet" href="http://127.0.0.1:5014/static/css/pablostyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -24,7 +24,7 @@
             style="background-color: #1A6DAC; height: 10vh;">
             <div class="container-fluid align-items-center">
                 <a class="navbar-brand" href="https://www.polymtl.ca/" target="_blank">
-                    <img src="static/images/logo_poly.png" class="img-thumbnail align-text-right d-inline-block" alt="Logo"
+                    <img src="http://127.0.0.1:5014/static/images/logo_poly.png" class="img-thumbnail align-text-right d-inline-block" alt="Logo"
                         width="55" height="55" style="margin-right: 20px;">
                     Polytechnique Montréal
                 </a>
@@ -83,14 +83,14 @@
                     </div>
                 </div>
                 <div class="col-4 mb-0">
-                    <img src="static/images/guitar_woman_frame.png" class="img-fluid">
+                    <img src="http://127.0.0.1:5014/static/images/guitar_woman_frame.png" class="img-fluid">
                 </div>
             </div>
         </div>
         <div class="b-example-divider"></div>
         <section class="section-hero">
             <div class="hero">
-                <img src="static/images/music_sheet_rotated.png" alt="music sheet">
+                <img src="http://127.0.0.1:5014/static/images/music_sheet_rotated.png" alt="music sheet">
                 <h1 class="display-4 fw-bold"> <span class="underline-pablo">¿How does this work?</span></h1>
                 <h4 class="display-6">Learn more about below, but first...</h4>
                 <button class="btn btn-outline-dark btn-lg btn-block mt-4 disabled-general"> <i class="fa fa-user fa-lg"></i>
@@ -101,7 +101,7 @@
         <div class="b-example-divider"></div>
         <section style="height: 30vh;" id="aeroplane-sec">
             <div class="noteaeroplane-animation" id="aeroplane_bckg_id">
-                <img class="noteaeroplane" src="static/images/midifile.png" alt="aeroplane note" id="aeroplanenote">
+                <img class="noteaeroplane" src="http://127.0.0.1:5014/static/images/midifile.png" alt="aeroplane note" id="aeroplanenote">
             </div>
         </section>
         <div id="pinContainer">
@@ -130,7 +130,7 @@
                         <div class="col-3">
                         </div>
                         <div class="col-6 justify-items-center">
-                            <img src="static/images/brain_network.png" class=" img-fluid"
+                            <img src="http://127.0.0.1:5014/static/images/brain_network.png" class=" img-fluid"
                                 style="margin-left: auto; margin-right: auto; display: block;">
                         </div>
                         <div class="col-3">
@@ -147,7 +147,7 @@
                             generated!</h1>
                     </div>
                     <div class="row h-50 align-items-center">
-                        <img src="static/images/music_gif.gif" class=" img-fluid"
+                        <img src="http://127.0.0.1:5014/static/images/music_gif.gif" class=" img-fluid"
                             style="max-width: 100%; height: auto; width: auto; margin-left: auto; margin-right: auto; display: block;">
                     </div>
                     <div class="row h-25 align-items-center">
@@ -171,8 +171,8 @@
                     </div>
                     <div class="container my-4" id="displayMIDI">
                         <hr />
-                        <div class="container-fluid text-left my-4">
-                            <ul id="midifileslist" style="list-style-type: none;" ></ul>
+                        <div class="container-fluid text-left my-4" style="display: inline;">
+                            <ul id="midifileslist"></ul>
                         </div>
                     </div>
                 </div>
@@ -198,23 +198,25 @@
             <div class="row">
                 <h1 class="display-4 fw-bold text-center mb-4">User status</h1>
             </div>
+            <hr class="my-2" style="width: 90%; margin:0 auto;" />
             <div class="row align-items-center">
                 <div class="col-1"></div>
                 <div class="col-7 align-items-center">
                     <h4 class="mb-2">Username</h4>
-                    <label class="mb-4"><b> {{ rendTempUsername }} </b></label>
+                    <label class="mb-4"><b id="idusername"> {{ rendTempUsername }} </b></label>
                     
 					<h4 class="mb-2">Email</h4>
                     <label class="mb-4"><b> {{ rendTempEmail }} </b></label>
 					
                     <h4 class="mb-2">Uploaded MIDI Files</h4>
-                    <label id="midiFilesLabel"></label>
+                    <label id="midiFilesLabel" class="my-2"></label>
                 </div>
                 <div class="col-4 justify-items-center">
-                    <img src="static/images/radiocassete.png" class="img-fluid"
+                    <img src="http://127.0.0.1:5014/static/images/radiocassete.png" class="img-fluid"
                         style="margin-left: auto; margin-right: auto; display: block;">
                 </div>
             </div>
+            <hr class="my-2" style="width: 90%; margin:0 auto;" />
             <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4 text-center">
@@ -306,7 +308,7 @@
         integrity="sha512-plyexAULVlTExvDn2yUZFJV9F8q+53MC/GpU9dEuNGXmrrI3J8Rcffjvxg3OOBALBvF+UILPLIBEoCeF2maqTQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="static/js/MainPage_logged.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:5014/static/js/MainPage_logged.js"></script>
 
 </body>
 
